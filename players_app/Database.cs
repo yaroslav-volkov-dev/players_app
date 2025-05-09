@@ -12,41 +12,30 @@ public class PlayersDatabase
         Players.Add(newPlayer.Id, newPlayer);
     }
 
-    public void RemovePlayer(Guid id)
+    public Player? RemovePlayer(Guid id)
     {
         bool isPlayerExists = TryFindPlayerById(id, out Player? player);
 
-        if (!isPlayerExists)
-        {
-            Console.WriteLine($"There's no player with id {id}");
-            return;
-        }
+        if (!isPlayerExists) return null;
 
         Players.Remove(id);
+        
+        return player;
     }
 
-    public void BanPlayerById(Guid id)
+    public Player? BanPlayerById(Guid id)
     {
-        if (TryFindPlayerById(id, out Player? player))
-        {
-            player.IsBanned = true;
-            Console.WriteLine($"Player {player.Name} has been banned");
-            return;
-        }
-
-        Console.WriteLine($"There's no player with id {id}");
+        if (!TryFindPlayerById(id, out Player? player)) return null;
+        player.IsBanned = true;
+        return player;
     }
 
-    public void UnbanPlayerById(Guid id)
+    public Player? UnbanPlayerById(Guid id)
     {
-        if (TryFindPlayerById(id, out Player? player))
-        {
-            player.IsBanned = false;
-            Console.WriteLine($"Player {player.Name} has been unbanned");
-            return;
-        }
+        if (!TryFindPlayerById(id, out Player? player)) return null;
+        player.IsBanned = false;
+        return player;
 
-        Console.WriteLine($"There's no player with id {id}");
     }
 
     public Player[] GetAllPlayers()

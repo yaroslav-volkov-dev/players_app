@@ -7,19 +7,20 @@ public class ConsoleInterface
         MainMenu,
         AddPlayer,
         RemovePlayer,
+        BanPlayer,
+        UnbanPlayer,
         ShowAllPlayers,
         ShowPlayerById,
         Exit
     }
     
-    private PlayersDatabase _db = new();
+    private PlayersDatabase _database = new();
     private ConsoleStateEnum ConsoleState { get; set; } = ConsoleStateEnum.MainMenu;
 
     public void Run()
     {
         while (ConsoleState != ConsoleStateEnum.Exit)
         {
-
             switch (ConsoleState)
             {
                 case ConsoleStateEnum.MainMenu:
@@ -71,13 +72,20 @@ public class ConsoleInterface
                 ConsoleState = ConsoleStateEnum.ShowAllPlayers;
                 break;
             case "4":
-                ConsoleState = ConsoleStateEnum.ShowPlayerById;
+                ConsoleState = ConsoleStateEnum.BanPlayer;
                 break;
             case "5":
+                ConsoleState = ConsoleStateEnum.UnbanPlayer;
+                break;
+            case "6":
+                ConsoleState = ConsoleStateEnum.ShowPlayerById;
+                break;
+            case "7":
                 ConsoleState = ConsoleStateEnum.Exit;
                 break;
             default:
                 Console.WriteLine("There's no such action");
+                ConsoleState = ConsoleStateEnum.MainMenu;
                 break;
         }
         
@@ -85,17 +93,69 @@ public class ConsoleInterface
 
     private void ShowAddPlayerUI()
     {
+        Console.WriteLine("Please, enter a name:");
+        string? name = Console.ReadLine()?.Trim();
+        
+        Console.WriteLine("Please, enter a level");
+        string? level =  Console.ReadLine()?.Trim();
+
+        if (!int.TryParse(level, out int levelInt) || name == null)
+        {
+            Console.WriteLine("One of the values is invalid");
+            ConsoleState = ConsoleStateEnum.AddPlayer;
+            return;
+        };
+        
+        _database.AddPlayer(name, levelInt);
+        Console.WriteLine("Player successfully added");
+        ConsoleState = ConsoleStateEnum.MainMenu;
+
+    }
+    
+    private void ShowRemovePlayerUI()
+    {
+        Console.WriteLine("Please, enter a player ID:");
+        string? playerId = Console.ReadLine()?.Trim();
+
+        if (playerId is null)
+        {
+            Console.WriteLine("Id cannot be empty");
+            ConsoleState = ConsoleStateEnum.RemovePlayer;
+            return;
+        }
+        
+        Player? removedPlayer = _database.RemovePlayer(Guid.Parse(playerId));
+
+        if (removedPlayer is null)
+        {
+            Console.WriteLine("Player not found");
+            ConsoleState = ConsoleStateEnum.RemovePlayer;
+            return;
+        }
+        
+        Console.WriteLine("Player successfully removed");
+        ConsoleState = ConsoleStateEnum.MainMenu;
+    }
+    
+    private void ShowBanPlayerUI()
+    {
         
     }
 
-    private void ShowRemovePlayerUI()
+    private void ShowUnbanPlayerUI()
     {
         
     }
 
     private void ShowGetAllPlayersUI()
     {
-        
+        Player[] players = _database.GetAllPlayers();
+        foreach (Player player in players)
+        {
+            Console.WriteLine(player);
+        }
+
+        ConsoleState = ConsoleStateEnum.MainMenu;
     }
 
     private void ShowPlayerByIdUI()
