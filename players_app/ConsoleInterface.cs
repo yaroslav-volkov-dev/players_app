@@ -48,6 +48,7 @@ public class ConsoleInterface
         }
     }
 
+    
     private void ShowMainMenuUI()
     {
         //TODO Add selectable interface
