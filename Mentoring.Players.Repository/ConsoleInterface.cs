@@ -4,6 +4,8 @@ public class ConsoleInterface
 {
     private enum ConsoleStateEnum
     {
+        //TODO: тут надо добавляти None
+        None,
         MainMenu,
         AddPlayer,
         RemovePlayer,
@@ -13,8 +15,11 @@ public class ConsoleInterface
         ShowPlayerById,
         Exit
     }
-    
-    private PlayersDatabase _database = new();
+
+    //todo: readonly and IPlayersDatabase
+    private readonly IPlayersDatabase _repository = new PlayersPostgresRepository();
+
+    //todo; нема сенсу робити проперті, якщо воно приватне
     private ConsoleStateEnum ConsoleState { get; set; } = ConsoleStateEnum.MainMenu;
 
     public void Run()
@@ -99,17 +104,21 @@ public class ConsoleInterface
         Console.WriteLine("Please, enter a level");
         string? level =  Console.ReadLine()?.Trim();
 
-        if (!int.TryParse(level, out int levelInt) || name == null)
+        bool isInvalidLevel = !int.TryParse(level, out int levelInt);
+
+        //TODO: refactoring
+        if (isInvalidLevel || string.IsNullOrWhiteSpace(name))
         {
             Console.WriteLine("One of the values is invalid");
             ConsoleState = ConsoleStateEnum.AddPlayer;
             return;
         };
         
-        _database.AddPlayer(name, levelInt);
-        Console.WriteLine("Player successfully added");
-        ConsoleState = ConsoleStateEnum.MainMenu;
+        _repository.AddPlayer(name, levelInt);
 
+        Console.WriteLine("Player successfully added");
+
+        ConsoleState = ConsoleStateEnum.MainMenu;
     }
     
     private void ShowRemovePlayerUI()
@@ -117,16 +126,16 @@ public class ConsoleInterface
         Console.WriteLine("Please, enter a player ID:");
         string? playerId = Console.ReadLine()?.Trim();
 
-        if (playerId is null)
+        if (string.IsNullOrWhiteSpace(playerId))
         {
             Console.WriteLine("Id cannot be empty");
             ConsoleState = ConsoleStateEnum.RemovePlayer;
             return;
         }
-        
-        Player? removedPlayer = _database.RemovePlayer(Guid.Parse(playerId));
 
-        if (removedPlayer is null)
+        //TODO: не дуже коректно вертати, можна вертати true false
+        Player? removedPlayer = _repository.TryRemovePlayer(Guid.Parse(playerId));
+        if (removedPlayer == null)
         {
             Console.WriteLine("Player not found");
             ConsoleState = ConsoleStateEnum.RemovePlayer;
@@ -149,7 +158,7 @@ public class ConsoleInterface
 
     private void ShowGetAllPlayersUI()
     {
-        Player[] players = _database.GetAllPlayers();
+        Player[] players = _repository.GetAllPlayers();
         foreach (Player player in players)
         {
             Console.WriteLine(player);
