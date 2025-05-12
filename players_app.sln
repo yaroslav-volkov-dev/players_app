@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "players_app", "players_app\players_app.csproj", "{D6CB51A8-D897-4CB8-B113-643609ED7529}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mentoring.Players.Repository", "Mentoring.Players.Repository\Mentoring.Players.Repository.csproj", "{D6CB51A8-D897-4CB8-B113-643609ED7529}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
