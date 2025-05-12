@@ -19,13 +19,13 @@ public class ConsoleInterface
     }
     
     private readonly PlayersInMemoryRepository _playersRepository = new();
-    private ConsoleStateEnum ConsoleState { get; set; } = ConsoleStateEnum.MainMenu;
+    private ConsoleStateEnum _consoleState = ConsoleStateEnum.MainMenu;
 
     public void Run()
     {
-        while (ConsoleState != ConsoleStateEnum.Exit)
+        while (_consoleState != ConsoleStateEnum.Exit)
         {
-            switch (ConsoleState)
+            switch (_consoleState)
             {
                 case ConsoleStateEnum.MainMenu:
                     ShowMainMenuUI();
@@ -71,29 +71,29 @@ public class ConsoleInterface
         switch (input)
         {
             case "1":
-                ConsoleState = ConsoleStateEnum.AddPlayer;
+                _consoleState = ConsoleStateEnum.AddPlayer;
                 break;
             case "2":
-                ConsoleState = ConsoleStateEnum.RemovePlayer;
+                _consoleState = ConsoleStateEnum.RemovePlayer;
                 break;
             case "3":
-                ConsoleState = ConsoleStateEnum.ShowAllPlayers;
+                _consoleState = ConsoleStateEnum.ShowAllPlayers;
                 break;
             case "4":
-                ConsoleState = ConsoleStateEnum.ShowPlayerById;
+                _consoleState = ConsoleStateEnum.ShowPlayerById;
                 break;
             case "5":
-                ConsoleState = ConsoleStateEnum.BanPlayer;
+                _consoleState = ConsoleStateEnum.BanPlayer;
                 break;
             case "6":
-                ConsoleState = ConsoleStateEnum.UnbanPlayer;
+                _consoleState = ConsoleStateEnum.UnbanPlayer;
                 break;
             case "7":
-                ConsoleState = ConsoleStateEnum.Exit;
+                _consoleState = ConsoleStateEnum.Exit;
                 break;
             default:
                 Console.WriteLine("There's no such action");
-                ConsoleState = ConsoleStateEnum.MainMenu;
+                _consoleState = ConsoleStateEnum.MainMenu;
                 break;
         }
         
@@ -107,7 +107,7 @@ public class ConsoleInterface
         if (string.IsNullOrWhiteSpace(name))
         {
             Console.WriteLine("Name cannot be empty");
-            ConsoleState = ConsoleStateEnum.AddPlayer;
+            _consoleState = ConsoleStateEnum.AddPlayer;
             return;
         }
         
@@ -117,27 +117,27 @@ public class ConsoleInterface
         if (string.IsNullOrWhiteSpace(levelInput)) 
         {
             Console.WriteLine("Level cannot be empty");
-            ConsoleState = ConsoleStateEnum.AddPlayer;
+            _consoleState = ConsoleStateEnum.AddPlayer;
             return;
         }
         
         if (!int.TryParse(levelInput, out int level)) 
         {
             Console.WriteLine("Invalid level format. Please enter a valid number.");
-            ConsoleState = ConsoleStateEnum.AddPlayer;
+            _consoleState = ConsoleStateEnum.AddPlayer;
             return;
         }
         
         if (level <= 0) 
         {
             Console.WriteLine("Level must be a positive number");
-            ConsoleState = ConsoleStateEnum.AddPlayer;
+            _consoleState = ConsoleStateEnum.AddPlayer;
             return;
         }
         
         _playersRepository.AddPlayer(name, level);
         Console.WriteLine("Player successfully added");
-        ConsoleState = ConsoleStateEnum.MainMenu;
+        _consoleState = ConsoleStateEnum.MainMenu;
     }
     
     private void ShowRemovePlayerUI()
@@ -148,13 +148,13 @@ public class ConsoleInterface
         if (string.IsNullOrWhiteSpace(playerId))
         {
             Console.WriteLine("Id cannot be empty");
-            ConsoleState = ConsoleStateEnum.RemovePlayer;
+            _consoleState = ConsoleStateEnum.RemovePlayer;
             return;
         } 
         
         _playersRepository.RemovePlayer(Guid.Parse(playerId));
         Console.WriteLine("Player successfully removed");
-        ConsoleState = ConsoleStateEnum.MainMenu;
+        _consoleState = ConsoleStateEnum.MainMenu;
     }
     
     private void ShowBanPlayerUI()
@@ -165,13 +165,13 @@ public class ConsoleInterface
         if (string.IsNullOrWhiteSpace(playerId))
         {
             Console.WriteLine("Id cannot be empty");
-            ConsoleState = ConsoleStateEnum.BanPlayer;
+            _consoleState = ConsoleStateEnum.BanPlayer;
             return;
         } 
         
         _playersRepository.BanPlayerById(Guid.Parse(playerId));
         Console.WriteLine("Player successfully banned");
-        ConsoleState = ConsoleStateEnum.MainMenu;
+        _consoleState = ConsoleStateEnum.MainMenu;
     }
 
     private void ShowUnbanPlayerUI()
@@ -182,13 +182,13 @@ public class ConsoleInterface
         if (string.IsNullOrWhiteSpace(playerId))
         {
             Console.WriteLine("Id cannot be empty");
-            ConsoleState = ConsoleStateEnum.UnbanPlayer;
+            _consoleState = ConsoleStateEnum.UnbanPlayer;
             return;
         } 
         
         _playersRepository.UnbanPlayerById(Guid.Parse(playerId));
         Console.WriteLine("Player successfully unbanned");
-        ConsoleState = ConsoleStateEnum.MainMenu;
+        _consoleState = ConsoleStateEnum.MainMenu;
     }
 
     private void ShowGetAllPlayersUI()
@@ -199,7 +199,7 @@ public class ConsoleInterface
             Console.WriteLine(player);
         }
 
-        ConsoleState = ConsoleStateEnum.MainMenu;
+        _consoleState = ConsoleStateEnum.MainMenu;
     }
 
     private void ShowPlayerByIdUI()
@@ -210,7 +210,7 @@ public class ConsoleInterface
         if (string.IsNullOrWhiteSpace(playerId))
         {
             Console.WriteLine("Id cannot be empty");
-            ConsoleState = ConsoleStateEnum.UnbanPlayer;
+            _consoleState = ConsoleStateEnum.UnbanPlayer;
             return;
         } 
         

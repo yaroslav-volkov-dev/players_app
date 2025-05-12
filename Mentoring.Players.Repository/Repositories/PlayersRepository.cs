@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Mentoring.Players.Repository.Interfaces;
+﻿using Mentoring.Players.Repository.Interfaces;
 using Mentoring.Players.Repository.Models;
 
 namespace Mentoring.Players.Repository.Repositories;
