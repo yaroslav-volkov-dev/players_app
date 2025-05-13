@@ -1,5 +1,5 @@
 ﻿
-namespace players_app;
+namespace Mentoring.Players.Repository;
 
 public static class Program
 {
