@@ -48,7 +48,7 @@ public class PlayersInMemoryRepository : IPlayersRepository
 
     public Player GetPlayerById(Guid id)
     {
-        Player? player = _playersDatabase.Find(player => player.Id == id);
+        Player? player = _playersDatabase.FirstOrDefault(player => player.Id == id);
         
         if (player is null)
         {
